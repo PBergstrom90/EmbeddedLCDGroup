@@ -1,0 +1,11 @@
+{
+    "makefile.makePath": "C:\\msys64\\mingw64\\bin\\mingw32-make",
+    "makefile.makefilePath": "Makefile",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "c:\\Users\\Pontu\\_Dev\\Nackademin\\C\\EmbeddedLCDGroup",
+            "binaryPath": "c:\\Users\\Pontu\\_Dev\\Nackademin\\C\\EmbeddedLCDGroup\\avrdemo.elf",
+            "binaryArgs": []
+        }
+    ]
+}
