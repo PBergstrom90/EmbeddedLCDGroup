@@ -6,6 +6,11 @@
             "cwd": "c:\\Users\\Pontu\\_Dev\\Nackademin\\C\\EmbeddedLCDGroup",
             "binaryPath": "c:\\Users\\Pontu\\_Dev\\Nackademin\\C\\EmbeddedLCDGroup\\avrdemo.elf",
             "binaryArgs": []
+        },
+        {
+            "cwd": "c:\\Users\\Pontu\\_Dev\\Nackademin\\C\\EmbeddedLCDGroup",
+            "binaryPath": "c:\\Users\\Pontu\\_Dev\\Nackademin\\C\\EmbeddedLCDGroup\\EmbeddedLCD.elf",
+            "binaryArgs": []
         }
     ]
 }

@@ -5,9 +5,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "lcd.h"
-#include "analogPin.h"
+#include "bitMacros.h"
 
-// https://wokwi.com/projects/365067824797777921
+// No Buttons in this project, only LCD.
+// https://wokwi.com/projects/382552146221115393
 
 // B (digital pin 8 to 13)
 // C (analog input pins)
@@ -23,15 +24,13 @@ int main(void){
     lcd.GoTo(0,0);
     lcd.WriteText("Hej Hej ");
 
-    Ntc ntc(AnalogPin(0));
-
     char text[20];
 
-    while(1){
-        lcd.Clear();
-        lcd.GoTo(0,0);
-        lcd.WriteText("Halloj");
-        _delay_ms(1000);
-    }
+     while(1){
+         lcd.Clear();
+         lcd.GoTo(0,0);
+         lcd.WriteText("Halloj");
+         _delay_ms(1000);
+     }
     return 0;
 }
