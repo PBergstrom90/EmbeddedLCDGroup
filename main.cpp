@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include "lcd.h"
 #include "bitMacros.h"
+#include "customer.h"
+#include "message.h"
 
 // No Buttons in this project, only LCD.
 // https://wokwi.com/projects/382552146221115393
@@ -24,13 +26,21 @@ int main(void){
     lcd.GoTo(0,0);
     lcd.WriteText("Hej Hej ");
 
-    char text[20];
+    char text[40];
 
      while(1){
          lcd.Clear();
          lcd.GoTo(0,0);
-         lcd.WriteText("Halloj");
-         _delay_ms(1000);
+         lcd.WriteText("Kop Paj hos Farmor Anka ");
+         _delay_ms(5000);
+         lcd.Clear();
+         lcd.GoTo(0,0);
+         lcd.WriteText("Skynda innan Marten atit alla pajer ");
+         _delay_ms(3000);
+         lcd.Clear();
+         lcd.GoTo(0,0);
+         lcd.WriteText("Tjena ");
+         _delay_ms(3000);
      }
     return 0;
 }

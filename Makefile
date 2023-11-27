@@ -11,7 +11,7 @@ LDFLAGS=-mmcu=$(MCU)
 PORT=\\\\.\\COM3
 BIN=EmbeddedLCD
 OUT=${BIN}.hex
-SOURCES = main.cpp lcd.cpp
+SOURCES = main.cpp lcd.cpp customer.cpp message.cpp
 
 DEBUG?=1
 
