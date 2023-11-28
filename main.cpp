@@ -13,17 +13,40 @@ int main()
 
     while (1) {
         lcd.clear();
-        lcd.home();
-        lcd.str_normal("Static!");
+        lcd.position(0, 0);
+        lcd.str_scroll("Kop bil hos Harry!");
+    
+        lcd.clear();
+        lcd.position(0, 0);
+        lcd.str_normal("En god bilaffar!");
+        _delay_ms(1500);
+        lcd.clear();
+        lcd.position(0, 0);
+        lcd.str_normal("(for Harry!)");
+        _delay_ms(3000);
+
+        lcd.clear();
+        lcd.position(0, 0);
+        lcd.str_blink("Hederlige Harrys bilar", 4);
+        _delay_ms(1000);
+
+        lcd.clear();
+        lcd.str_scroll("Kop paj hos Farmor Anka!");
+
+        lcd.clear();
+        lcd.position(0, 0);
+        lcd.str_normal("Skynda innan");
         _delay_ms(1500);
 
         lcd.clear();
-        lcd.home();
-        lcd.str_scroll("A very long scrolling text...");
+        lcd.position(0, 0);
+        lcd.str_normal("Marten har atit alla pajer");
+        _delay_ms(1500);
 
         lcd.clear();
-        lcd.home();
-        lcd.str_blink("Blinking!", 5);
+        lcd.position(0, 0);
+        lcd.str_normal("alla pajer!");
+        _delay_ms(3000);
     }
 
     return 0;
