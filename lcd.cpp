@@ -20,6 +20,11 @@ void LCD::home()
     send_command(0x80);
 }
 
+void LCD::position(unsigned x, unsigned y)
+{
+    send_command(0x80 | ((0x40 * y) + x));
+}
+
 void LCD::clear()
 {
     send_command(0x01);
@@ -33,12 +38,23 @@ void LCD::str_normal(const char *str)
 
 void LCD::str_scroll(const char *str)
 {
+    int x = 15;
     do {
         clear();
-        home();
-        str_normal(str);
+        position(x, 0);
+        for (unsigned i = 0; i < (16 - x); i++) {
+            send_ch(str[i]);
+        }
         _delay_ms(150);
-    } while (*str++);
+        x--;
+    } while (x > 0);
+
+    do {
+        clear();
+        position(0, 0);
+        str_normal(str++);
+        _delay_ms(150);
+    } while (*str);
 }
 
 void LCD::str_blink(const char *str, unsigned n)
@@ -87,3 +103,4 @@ void LCD::pulse_enable()
     _delay_us(1);
     LCD_CTRL_PORT &= ~LCD_EN;
 }
+

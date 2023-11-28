@@ -14,6 +14,7 @@ class LCD {
 public:
     void init();
     void home();
+    void position(unsigned x, unsigned y);
     void clear();
     void str_normal(const char* str);
     void str_scroll(const char* str);
