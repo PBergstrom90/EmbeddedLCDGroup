@@ -1,4 +1,4 @@
-bin/debug/main.o: main.cpp c:\avr\avr\include\avr\io.h \
+bin/release/main.o: main.cpp c:\avr\avr\include\avr\io.h \
  c:\avr\avr\include\avr\sfr_defs.h c:\avr\avr\include\inttypes.h \
  c:\avr\lib\gcc\avr\12.1.0\include\stdint.h c:\avr\avr\include\stdint.h \
  c:\avr\avr\include\avr\iom328p.h c:\avr\avr\include\avr\portpins.h \
