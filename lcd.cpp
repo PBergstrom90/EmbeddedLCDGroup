@@ -1,3 +1,4 @@
+#include <string.h>
 #include "lcd.h"
 
 void HD44780::OutNibble(unsigned char nibbleToWrite) {
@@ -23,7 +24,7 @@ void HD44780::OutNibble(unsigned char nibbleToWrite) {
 }
 //-------------------------------------------------------------------------------------------------
 //
-// Funkcja zapisu bajtu do wy�wietacza (bez rozr�nienia instrukcja/dane).
+// Function to write a byte to the display (without distinguishing between instruction/data).
 //
 //-------------------------------------------------------------------------------------------------
 void HD44780::Write(unsigned char dataToWrite) {
@@ -37,7 +38,7 @@ void HD44780::Write(unsigned char dataToWrite) {
 }
 //-------------------------------------------------------------------------------------------------
 //
-// Funkcja zapisu rozkazu do wy�wietlacza
+// Function to write a command to the display.
 //
 //-------------------------------------------------------------------------------------------------
 void HD44780::WriteCommand(unsigned char commandToWrite) {
@@ -46,7 +47,7 @@ void HD44780::WriteCommand(unsigned char commandToWrite) {
 }
 //-------------------------------------------------------------------------------------------------
 //
-// Funkcja zapisu danych do pami�ci wy�wietlacza
+// Function to write data to the display memory.
 //
 //-------------------------------------------------------------------------------------------------
 void HD44780::WriteData(unsigned char dataToWrite) {
@@ -63,16 +64,49 @@ void HD44780::WriteData(unsigned char dataToWrite) {
 }
 //-------------------------------------------------------------------------------------------------
 //
-// Funkcja wy�wietlenia napisu na wyswietlaczu.
+// Function to display text on the screen.
 //
 //-------------------------------------------------------------------------------------------------
-void HD44780::WriteText(char * text) {
-	while (*text)
-		WriteData(*text++);
+void HD44780::WriteText(const char *text) {
+    while (*text) {
+        // Write the current character to the display
+        WriteData(*text++);
+        // Increment the x position for the next character
+        ++position_x;
+    }
 }
 //-------------------------------------------------------------------------------------------------
 //
-// Funkcja ustawienia wsp�rz�dnych ekranowych
+// Function to scroll through text on the display. 
+//
+//-------------------------------------------------------------------------------------------------
+void HD44780::ScrollText(const char *text) {
+    uint8_t textLength = strlen(text);
+        // Scroll the text to the left
+        for (uint8_t i = 0; i < textLength; ++i) {
+            Clear();
+            GoTo(0, 0);
+            WriteText(text + i);
+            _delay_ms(400);
+        }
+}
+//-------------------------------------------------------------------------------------------------
+//
+// Function to write blinking text on the display. 
+//
+//-------------------------------------------------------------------------------------------------
+void HD44780::BlinkText(const char *text, uint8_t blinkCount) {
+    for (uint8_t count = 0; count < blinkCount; ++count) {
+        Clear();
+        _delay_ms(600);
+        WriteText(text);
+        _delay_ms(600);
+		Clear();
+    }
+}
+//-------------------------------------------------------------------------------------------------
+//
+// Function to set screen coordinates.
 //
 //-------------------------------------------------------------------------------------------------
 void HD44780::GoTo(unsigned char dx, unsigned char dy) {
@@ -82,7 +116,7 @@ void HD44780::GoTo(unsigned char dx, unsigned char dy) {
 }
 //-------------------------------------------------------------------------------------------------
 //
-// Funkcja czyszczenia ekranu wy�wietlacza.
+// Function to clear the display screen.
 //
 //-------------------------------------------------------------------------------------------------
 void HD44780::Clear(void) {
@@ -91,7 +125,7 @@ void HD44780::Clear(void) {
 }
 //-------------------------------------------------------------------------------------------------
 //
-// Funkcja przywr�cenia pocz�tkowych wsp�rz�dnych wy�wietlacza.
+// Function to restore the initial coordinates of the display.
 //
 //-------------------------------------------------------------------------------------------------
 void HD44780::Home(void) {
@@ -100,57 +134,59 @@ void HD44780::Home(void) {
 }
 //-------------------------------------------------------------------------------------------------
 //
-// Procedura inicjalizacji kontrolera HD44780.
+// Procedure for the initialization of the HD44780 controller.
 //
 //-------------------------------------------------------------------------------------------------
 void HD44780::Initalize(void) {
 	unsigned char i;
 
-	LCD_DB4_DIR |= LCD_DB4; // Konfiguracja kierunku pracy wyprowadze�
+	LCD_DB4_DIR |= LCD_DB4; // Configure the direction of the port pins
 	LCD_DB5_DIR |= LCD_DB5; //
 	LCD_DB6_DIR |= LCD_DB6; //
 	LCD_DB7_DIR |= LCD_DB7; //
 	LCD_E_DIR |= LCD_E;   //
 	LCD_RS_DIR |= LCD_RS;  //
-	_delay_ms(15); // oczekiwanie na ustalibizowanie si� napiecia zasilajacego
-	LCD_RS_PORT &= ~LCD_RS; // wyzerowanie linii RS
-	LCD_E_PORT &= ~LCD_E;  // wyzerowanie linii E
+	_delay_ms(15);  // Wait for the power supply voltage to stabilize
+	// Set RS (Register Select) and E (Enable) lines to low
+	LCD_RS_PORT &= ~LCD_RS; 
+	LCD_E_PORT &= ~LCD_E;  
 
-	for (i = 0; i < 3; i++) // trzykrotne powt�rzenie bloku instrukcji
+	// Execute a sequence of commands to initialize the LCD
+	for (i = 0; i < 3; i++)
 			{
-		LCD_E_PORT |= LCD_E; //  E = 1
-		OutNibble(0x03); // tryb 8-bitowy
+		LCD_E_PORT |= LCD_E; // E = 1
+		OutNibble(0x03); // 8-bit mode
 		LCD_E_PORT &= ~LCD_E; // E = 0
-		_delay_ms(5); // czekaj 5ms
+		_delay_ms(5); // Wait for 5ms
 	}
 
 	LCD_E_PORT |= LCD_E; // E = 1
-	OutNibble(0x02); // tryb 4-bitowy
+	OutNibble(0x02); // 4-bit mode
 	LCD_E_PORT &= ~LCD_E; // E = 0
 
-	_delay_ms(1); // czekaj 1ms
+	_delay_ms(1); // Wait for 1ms
 	WriteCommand(
-	HD44780_FUNCTION_SET | HD44780_FONT5x7 | HD44780_TWO_LINE | HD44780_4_BIT); // interfejs 4-bity, 2-linie, znak 5x7
-	WriteCommand(HD44780_DISPLAY_ONOFF | HD44780_DISPLAY_OFF); // wy��czenie wyswietlacza
-	WriteCommand(HD44780_CLEAR); // czyszczenie zawartos�i pamieci DDRAM
+	HD44780_FUNCTION_SET | HD44780_FONT5x7 | HD44780_TWO_LINE | HD44780_4_BIT); // Configure LCD function: 4-bit interface, 2 lines, 5x7 character font
+	WriteCommand(HD44780_DISPLAY_ONOFF | HD44780_DISPLAY_OFF); // Turn off the display
+	WriteCommand(HD44780_CLEAR);  // Clear the content of DDRAM
 	_delay_ms(2);
 	WriteCommand(
-	HD44780_ENTRY_MODE | HD44780_EM_SHIFT_CURSOR | HD44780_EM_INCREMENT); // inkrementaja adresu i przesuwanie kursora
+	HD44780_ENTRY_MODE | HD44780_EM_SHIFT_CURSOR | HD44780_EM_INCREMENT);  // Set the entry mode: increment the address, shift the cursor
 	WriteCommand(
 			HD44780_DISPLAY_ONOFF | HD44780_DISPLAY_ON | HD44780_CURSOR_OFF
-					| HD44780_CURSOR_NOBLINK); // w��cz LCD, bez kursora i mrugania
+					| HD44780_CURSOR_NOBLINK); // Turn on the display without cursor and blinking
 }
 
-//Input:
+// Input:
 //     location: location where you want to store
 //               0,1,2,....7
 //     ptr: Pointer to pattern data
 //
-//Usage:
+// Usage:
 //     pattern[8]={0x04,0x0E,0x0E,0x0E,0x1F,0x00,0x04,0x00};
 //     LCD_build(1,pattern);
 //
-//LCD Ports are same as discussed in previous sections
+// LCD Ports are same as discussed in previous sections
 
 void HD44780::BuildFont(unsigned char location, unsigned char *ptr) {
 	unsigned char i;

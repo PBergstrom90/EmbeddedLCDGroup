@@ -92,7 +92,9 @@ public:
 
 	void WriteCommand(unsigned char);
 	void WriteData(unsigned char);
-	void WriteText(char *);
+	void WriteText(const char *);
+	void ScrollText(const char *);
+	void BlinkText(const char *, uint8_t);
 	void GoTo(unsigned char, unsigned char);
 	void Clear(void);
 	void Home(void);
