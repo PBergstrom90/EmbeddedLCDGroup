@@ -48,6 +48,6 @@ int main()
         lcd.str_normal("alla pajer!");
         _delay_ms(3000);
     }
-
+  
     return 0;
 }
