@@ -67,6 +67,15 @@ void LCD::str_blink(const char *str, unsigned n)
     }
 }
 
+void LCD::set_cgram(uint8_t *buf)
+{
+    for (int ch_index = 0; ch_index < 8; ch_index++) {
+        send_command(LCD_CGRAM_SET | (ch_index << 3));
+        for (int row = 0; row < 8; row++)
+            send_ch(buf[ch_index * 8 + row]);
+    }
+}
+
 void LCD::send_ch(uint8_t ch)
 {
     // High nibble

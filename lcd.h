@@ -53,6 +53,7 @@ public:
     void str_normal(const char* str);
     void str_scroll(const char* str);
     void str_blink(const char* str, unsigned n);
+    void set_cgram(uint8_t* buf);
 private:
     void send_ch(uint8_t ch);
     void send_command(uint8_t command);
