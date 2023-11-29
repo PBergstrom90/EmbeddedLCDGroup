@@ -112,4 +112,3 @@ void LCD::pulse_enable()
     _delay_us(1);
     LCD_CTRL_PORT &= ~LCD_EN;
 }
-
