@@ -14,6 +14,8 @@ public:
     void setActive(bool active);
     void getNextMessage(LCD* lcd);
     void initCustomerMessages(Customer customers[], const int numCustomers);
+    int getLowerBound() const;
+    int getUpperBound() const;
 
 private:
     int paid;

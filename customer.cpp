@@ -17,7 +17,13 @@ Customer::Customer(int paid, bool active, int lowerBound, int upperBound, const 
 void Customer::setActive(bool active) {
     this->active = active;
 }
+int Customer::getLowerBound() const {
+    return lowerBound;
+}
 
+int Customer::getUpperBound() const {
+    return upperBound;
+}
 void Customer::getNextMessage(LCD* lcd) {
     // Generate a random index to select a message
     int randomIndex;
@@ -37,5 +43,5 @@ void Customer::getNextMessage(LCD* lcd) {
     } else {
         lcd->str_normal(selectedMessage.getText());
     }
-    _delay_ms(2500);  // Add a delay or other logic as needed
+    _delay_ms(2500);
 }

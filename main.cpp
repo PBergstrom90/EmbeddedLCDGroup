@@ -41,6 +41,7 @@
 */
 
 void initCustomerMessages(Customer customers[], const int numCustomers);
+void chooseCustomer(LCD lcd);
 
 int main()
 {
@@ -49,18 +50,47 @@ int main()
 
     // Seed the random number generator
     srand((unsigned int)time(NULL));
-    
-    const int numCustomers = 5;
+
+        const int numCustomers = 5;
 
     Customer customers[numCustomers];
 
     // Initialize arrays
     initCustomerMessages(customers, numCustomers);
+    
+    int prevCustomerIndex = 0;
 
-   while (1) {
-        // Choose a random customer
-        int randomCustomerIndex = rand() % numCustomers;
-        Customer& selectedCustomer = customers[randomCustomerIndex];
+    while (1) {
+        // Choose a random customer based on the likelihood defined by lowerBound and upperBound
+        int totalRange = 0;
+        for (int i = 0; i < numCustomers; ++i) {
+            totalRange += customers[i].getUpperBound() - customers[i].getLowerBound() + 1;
+        }
+        int randomValue = rand() % totalRange;
+        int selectedCustomerIndex = -1;
+        for (int i = 0; i < numCustomers; ++i) {
+            randomValue -= customers[i].getUpperBound() - customers[i].getLowerBound() + 1;
+
+            if (randomValue <= 0) {
+                selectedCustomerIndex = i;
+                break;
+            }
+        }
+
+        // Ensure the newly selected customer is different from the previous one
+        while (selectedCustomerIndex == prevCustomerIndex) {
+            randomValue = rand() % totalRange;
+            selectedCustomerIndex = -1;
+            for (int i = 0; i < numCustomers; ++i) {
+                randomValue -= customers[i].getUpperBound() - customers[i].getLowerBound() + 1;
+                if (randomValue <= 0) {
+                    selectedCustomerIndex = i;
+                    break;
+                }
+            }
+        }
+        prevCustomerIndex = selectedCustomerIndex;  // Update the previous customer index
+        Customer& selectedCustomer = customers[selectedCustomerIndex];
 
         // Display the next message for the selected customer on LCD
         selectedCustomer.getNextMessage(&lcd);
@@ -82,8 +112,8 @@ void initCustomerMessages(Customer customers[], const int numCustomers) {
 
     // Farmor Ankas Pajer AB:
     static const Message messagesCustomer2[] = {
-        {"K\xf6p paj hos Farmor Anka!", true, false, false, false},
-        {"Skynda innan\nM\xe5rten har \xe4tit alla pajer", false, false, false, false}
+        {"K\xf6p paj hos Farmor Anka! ", true, false, false, false},
+        {"Skynda innan\nM\xe5rten har \xe4tit alla pajer ", false, false, false, false}
     };
 
     // Svarte Petters Svartbyggen:
@@ -94,13 +124,13 @@ void initCustomerMessages(Customer customers[], const int numCustomers) {
 
     // Långbens detektivbyrå:
     static const Message messagesCustomer4[] = {
-        {"Mysterier? \nRing L\xe5ngben", false, false, false, false},
-        {"L\xe5ngben fixar\nbiffen", false, false, false, false}
+        {"Mysterier? \nRing L\xe5ngben ", false, false, false, false},
+        {"L\xe5ngben fixar\nbiffen ", false, false, false, false}
     };
 
     // IoTs reklambyrå:
     static const Message messagesCustomer5[] = {
-        {"Synas h\xe4r?  \x08\x09\x0a\x0b\nIoT:s reklambyr\xe5", false, false, false, false}
+        {"Synas h\xe4r?  \x08\x09\x0a\x0b\nIoT:s reklambyr\xe5 ", false, false, false, false}
     };
 
     // Set up customers
