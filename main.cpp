@@ -89,11 +89,7 @@ static void default_behaviour(LCD& lcd)
     
         lcd.clear();
         lcd.position(0, 0);
-        lcd.str_normal("En god bilaff\xe4r!");
-        //_delay_ms(1500);
-        //lcd.clear();
-        lcd.position(0, 1);
-        lcd.str_normal("(f\xf6r Harry!)");
+        lcd.str_normal("En god bilaff\xe4r!\n(f\xf6r Harry!)");
         _delay_ms(3000);
 
         lcd.clear();
@@ -126,9 +122,9 @@ int main()
     LCD lcd;
     lcd.init();
     
-    infinite_scrolling_faces(lcd);
+    //infinite_scrolling_faces(lcd);
     //self_promotion(lcd);
-    //default_behaviour(lcd);
+    default_behaviour(lcd);
 
     return 0;
 }
