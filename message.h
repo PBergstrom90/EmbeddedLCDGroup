@@ -1,14 +1,21 @@
-#ifndef __MESSAGE_H_
-#define __MESSAGE_H_
+#ifndef MESSAGE_H_
+#define MESSAGE_H_
 
 #include <string.h>
-#include <stdio.h>
+#include "customer.h"
 
 class Message {
-
 public:
-Message(char[100], bool scroll, bool blink, bool evenminutes, bool oddminutes);
-
+    Message(const char* text, bool scroll, bool blink, bool evenminutes, bool oddminutes);
+    const char* getText() const;
+    bool shouldScroll() const;
+    bool shouldBlink() const;
+private:
+    const char* text;
+    bool scroll;
+    bool blink;
+    bool evenminutes;
+    bool oddminutes;
 };
 
-#endif // __MESSAGE_H_
+#endif // MESSAGE_H_
