@@ -46,6 +46,11 @@
 
 class LCD {
 public:
+    LCD()
+        : position_x(0)
+        , position_y(0)
+    { }
+
     void init();
     void home();
     void position(unsigned x, unsigned y);
@@ -58,6 +63,9 @@ private:
     void send_ch(uint8_t ch);
     void send_command(uint8_t command);
     void pulse_enable();
+
+    int position_x;
+    int position_y;
 };
 
 #endif

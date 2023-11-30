@@ -22,7 +22,11 @@ void LCD::home()
 
 void LCD::position(unsigned x, unsigned y)
 {
+    x = (x < 0) ? x = 0 : (x > 15) ? x = 15 : x;
+    y = (y < 0) ? y = 0 : (y >  1) ? y =  1 : y;
     send_command(LCD_DDRAM_SET | ((0x40 * y) + x));
+    position_x = x;
+    position_x = y;
 }
 
 void LCD::clear()
@@ -32,8 +36,15 @@ void LCD::clear()
 
 void LCD::str_normal(const char *str)
 {
-    while (*str)
-        send_ch(*str++);
+    while (*str) {
+        if (*str == '\n') {
+            position(0, position_y + 1);
+        } else {
+            send_ch(*str);
+            position_x++;
+        }
+        str++;
+    }
 }
 
 void LCD::str_scroll(const char *str)
