@@ -30,12 +30,12 @@ void Customer::getNextMessage(LCD* lcd) {
     // Access and display the selected message on the LCD
     const Message& selectedMessage = messages[randomIndex];
     lcd->clear();
-    lcd->str_normal(selectedMessage.getText());
-
     if (selectedMessage.shouldScroll()) {
         lcd->str_scroll(selectedMessage.getText());
     } else if (selectedMessage.shouldBlink()) {
         lcd->str_blink(selectedMessage.getText(), 4);
+    } else {
+        lcd->str_normal(selectedMessage.getText());
     }
-    _delay_ms(2000);  // Add a delay or other logic as needed
+    _delay_ms(2500);  // Add a delay or other logic as needed
 }

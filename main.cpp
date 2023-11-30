@@ -38,43 +38,6 @@
 
     _delay_ms(3000);
 }
-
-static void default_behaviour(LCD& lcd)
-{
-    while (1) {
-        lcd.clear();
-        lcd.position(0, 0);
-        lcd.str_scroll("K\xf6p bil hos Harry!");
-    
-        lcd.clear();
-        lcd.position(0, 0);
-        lcd.str_normal("En god bilaff\xe4r\n(f\xf6r Harry!)");
-        _delay_ms(3000);
-
-        lcd.clear();
-        lcd.position(0, 0);
-        lcd.str_blink("Hederlige Harrys\n     Bilar", 4);
-        _delay_ms(1000);
-
-        lcd.clear();
-        lcd.str_scroll("K\xf6p paj hos Farmor Anka!");
-
-        lcd.clear();
-        lcd.position(0, 0);
-        lcd.str_normal("Skynda innan");
-        _delay_ms(1500);
-
-        lcd.clear();
-        lcd.position(0, 0);
-        lcd.str_normal("M\xe5rten har \xe4tit alla pajer");
-        _delay_ms(1500);
-
-        lcd.clear();
-        lcd.position(0, 0);
-        lcd.str_normal("alla pajer!");
-        _delay_ms(3000);
-    }
-}
 */
 
 void initCustomerMessages(Customer customers[], const int numCustomers);
