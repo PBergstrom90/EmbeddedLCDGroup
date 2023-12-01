@@ -42,8 +42,9 @@
 }
 */
 
-void initCustomerMessages(Customer customers[], const int numCustomers);
-void chooseCustomer(LCD lcd);
+void initCustomerMessages(Customer customerList[], const int numCustomers);
+const Message& getNextMessage(LCD* lcd, const Customer& customer); 
+int customerRng(Customer* customerList, uint8_t numCustomers);
 
 int main()
 {
@@ -53,37 +54,17 @@ int main()
     // Seed the random number generator
     srand((unsigned int)time(NULL));
 
-        const int numCustomers = 5;
-
-    Customer customers[numCustomers];
+    const uint8_t numCustomers = 5;
+    Customer customerList[numCustomers];
 
     // Initialize arrays
-    initCustomerMessages(customers, numCustomers);
+    initCustomerMessages(customerList, numCustomers);
     
     while (1) {
         
-        // DEBUG MSG
-        // lcd.clear();
-        // lcd.str_normal("Reset loop");
-        // _delay_ms(1000);
+        int customerIndex = customerRng(customerList, numCustomers);
+        const Message& messages = getNextMessage(&lcd, customerList[customerIndex]);
 
-        // Choose a random number between 0 and 14499
-        int randomValue = rand() % 14500;
-
-        // Find the corresponding customer based on the random value
-        int selectedCustomerIndex = -1;
-        for (int i = 0; i < numCustomers; ++i) {
-            if (randomValue >= customers[i].getLowerBound() && randomValue <= customers[i].getUpperBound()) {
-                selectedCustomerIndex = i;
-                break;
-            }
-        }
-
-        if (selectedCustomerIndex != -1) {
-            Customer& selectedCustomer = customers[selectedCustomerIndex];
-            selectedCustomer.getNextMessage(&lcd);
-        }
-        
         // DEBUG MSG: Reset Watchdog-timer for microcontroller.
         // lcd.clear();
         // lcd.str_normal("Reset watchdog");
@@ -94,8 +75,49 @@ int main()
     return 0;
 }
 
+const Message& getNextMessage(LCD* lcd, const Customer& customer) {
+    // Access and display the selected message on the LCD
+     const Message& selectedMessage = customer.getNextMessage();
+    
+     lcd->clear();
+     if (selectedMessage.shouldScroll()) {
+         lcd->str_scroll(selectedMessage.getText());
+         _delay_ms(1000);
+     } else if (selectedMessage.shouldBlink()) {
+        lcd->str_blink(selectedMessage.getText(), 4);
+         _delay_ms(1000);
+     } else {
+        lcd->str_normal(selectedMessage.getText());
+        _delay_ms(2000);
+     }
+ }
+
+int customerRng(Customer* customers, uint8_t numCustomers)
+{
+  // Calculate total amount of cash
+  int totalCash = 0;
+  for (uint8_t i = 0; i < numCustomers; i++) {
+    totalCash += customers[i].getPay();
+  }
+
+  unsigned int randomValue = rand() & totalCash;
+  unsigned int lowerBound = 0;
+  int luckyCustomerIndex= -1;
+  for (uint8_t i = 0; i < numCustomers; i++) {
+    if (randomValue >= lowerBound && randomValue < lowerBound + customers[i].getPay()) {
+      // We found our winner
+      luckyCustomerIndex= i;
+      break;
+    }
+
+    // Increase our lower bound for next customer
+    lowerBound += customers[i].getPay();
+  }
+  return luckyCustomerIndex;
+}
+
 // Function to initialize and return the arrays
-void initCustomerMessages(Customer customers[], const int numCustomers) {
+void initCustomerMessages(Customer customerList[], const int numCustomers) {
     // Arrays of unique messages for each customer
 
     // Hederlige Harrys Bilar:
@@ -125,13 +147,13 @@ void initCustomerMessages(Customer customers[], const int numCustomers) {
 
     // IoTs reklambyrå:
     static const Message messagesCustomer5[] = {
-        {"Synas h\xe4r?  \x08\x09\x0a\x0b\nIoT:s reklambyr\xe5 ", MSGEFF_SCROLL | MSGEFF_BLINK, false, false}
+        {"Synas h\xe4r?  \x08\x09\x0a\x0b\nIoT:s reklambyr\xe5 ", MSGEFF_SCROLL, false, false}
     };
 
     // Set up customers
-    customers[0] = Customer(5000, true, 0, 4999, messagesCustomer1, sizeof(messagesCustomer1) / sizeof(Message));
-    customers[1] = Customer(3000, true, 5000, 7999, messagesCustomer2, sizeof(messagesCustomer2) / sizeof(Message));
-    customers[2] = Customer(1500, true, 8000, 9499, messagesCustomer3, sizeof(messagesCustomer3) / sizeof(Message));
-    customers[3] = Customer(4000, true, 9500, 13499, messagesCustomer4, sizeof(messagesCustomer4) / sizeof(Message));
-    customers[4] = Customer(1000, true, 13500, 14499, messagesCustomer5, sizeof(messagesCustomer5) / sizeof(Message));
+    customerList[0] = Customer(5000, true, messagesCustomer1, sizeof(messagesCustomer1) / sizeof(Message));
+    customerList[1] = Customer(3000, true, messagesCustomer2, sizeof(messagesCustomer2) / sizeof(Message));
+    customerList[2] = Customer(1500, true, messagesCustomer3, sizeof(messagesCustomer3) / sizeof(Message));
+    customerList[3] = Customer(4000, true, messagesCustomer4, sizeof(messagesCustomer4) / sizeof(Message));
+    customerList[4] = Customer(1000, true, messagesCustomer5, sizeof(messagesCustomer5) / sizeof(Message));
 }

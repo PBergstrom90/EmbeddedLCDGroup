@@ -10,18 +10,14 @@ class Customer {
 
 public:
     Customer();
-    Customer(int paid, bool active, int lowerBound, int upperBound, const Message* messages, int numMessages);
+    Customer(int paid, bool active, const Message* messages, int numMessages);
     void setActive(bool active);
-    void getNextMessage(LCD* lcd);
-    void initCustomerMessages(Customer customers[], const int numCustomers);
-    int getLowerBound() const;
-    int getUpperBound() const;
+    void initCustomerMessages(Customer customerList[], const int numCustomers);
+    int getPay() const;
 
 private:
     int paid;
     bool active;
-    int lowerBound;
-    int upperBound;
     const Message* messages;
     int numMessages;
     int lastMessageIndex;
