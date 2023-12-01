@@ -5,8 +5,8 @@
 #include "message.h"
 #include "customer.h"
 
-Message::Message(const char* text, bool scroll, bool blink, bool evenminutes, bool oddminutes)
-    : text(text), scroll(scroll), blink(blink), evenminutes(evenminutes), oddminutes(oddminutes) {
+Message::Message(const char* text, unsigned flags, bool evenminutes, bool oddminutes)
+    : text(text), scroll(flags & MSGEFF_SCROLL), blink(flags & MSGEFF_BLINK), evenminutes(evenminutes), oddminutes(oddminutes) {
 }
 
 const char* Message::getText() const {

@@ -38,10 +38,12 @@ void Customer::getNextMessage(LCD* lcd) {
     lcd->clear();
     if (selectedMessage.shouldScroll()) {
         lcd->str_scroll(selectedMessage.getText());
+        _delay_ms(1000);
     } else if (selectedMessage.shouldBlink()) {
         lcd->str_blink(selectedMessage.getText(), 4);
+        _delay_ms(1000);
     } else {
         lcd->str_normal(selectedMessage.getText());
+        _delay_ms(2000);
     }
-    _delay_ms(2500);
 }
