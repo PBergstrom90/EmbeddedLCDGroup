@@ -14,14 +14,14 @@ public:
     void setActive(bool active);
     void initCustomerMessages(Customer customerList[], const int numCustomers);
     int getPay() const;
-    const Message& getNextMessage();
+    const Message& getNextMessage() const;
 
 private:
     int paid;
     bool active;
     const Message* messages;
     int numMessages;
-    int lastMessageIndex;
+    mutable int lastMessageIndex; // Add mutable keyword to allow modification in const functions
 };
 
 #endif // __CUSTOMER_H_

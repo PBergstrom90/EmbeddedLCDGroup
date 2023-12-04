@@ -22,7 +22,7 @@ int Customer::getPay() const {
     return paid;
 }
 
-const Message& Customer::getNextMessage() {
+const Message& Customer::getNextMessage() const {
     // Generate a random index to select a message
     int randomIndex;
     do {
