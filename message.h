@@ -1,14 +1,27 @@
-#ifndef __MESSAGE_H_
-#define __MESSAGE_H_
+#ifndef MESSAGE_H_
+#define MESSAGE_H_
 
 #include <string.h>
-#include <stdio.h>
+#include "customer.h"
 
-class Message {
-
-public:
-Message(char[100], bool scroll, bool blink, bool evenminutes, bool oddminutes);
-
+enum MessageEffects {
+    MSGEFF_NONE   = 0,
+    MSGEFF_SCROLL = (1 << 0),
+    MSGEFF_BLINK  = (1 << 1),
 };
 
-#endif // __MESSAGE_H_
+class Message {
+public:
+    Message(const char* text, unsigned flags, bool evenminutes, bool oddminutes);
+    const char* getText() const;
+    bool shouldScroll() const;
+    bool shouldBlink() const;
+private:
+    const char* text;
+    bool scroll;
+    bool blink;
+    bool evenminutes;
+    bool oddminutes;
+};
+
+#endif // MESSAGE_H_
