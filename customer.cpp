@@ -27,7 +27,7 @@ const Message& Customer::getNextMessage() const {
     int randomIndex;
     do {
         randomIndex = rand() % numMessages;
-    } while (randomIndex == lastMessageIndex);  // Ensure the same message is not displayed twice in a row
+    } while (randomIndex == lastMessageIndex && numMessages > 1);  // Ensure the same message is not displayed twice in a row (unless we only have one message)
 
     lastMessageIndex = randomIndex;  // Update the last displayed message index
 
