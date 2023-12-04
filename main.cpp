@@ -43,7 +43,7 @@
 */
 
 void initCustomerMessages(Customer customerList[], const int numCustomers);
-const Message& getNextMessage(LCD* lcd, const Customer& customer); 
+void displayNextMessage(LCD* lcd, const Customer& customer);
 int customerRng(Customer* customerList, uint8_t numCustomers);
 
 int main()
