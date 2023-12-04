@@ -14,6 +14,7 @@ public:
     void setActive(bool active);
     void initCustomerMessages(Customer customerList[], const int numCustomers);
     int getPay() const;
+    const Message& getNextMessage();
 
 private:
     int paid;

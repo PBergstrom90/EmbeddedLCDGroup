@@ -63,7 +63,7 @@ int main()
     while (1) {
         
         int customerIndex = customerRng(customerList, numCustomers);
-        const Message& messages = getNextMessage(&lcd, customerList[customerIndex]);
+        displayNextMessage(&lcd, customerList[customerIndex]);
 
         // DEBUG MSG: Reset Watchdog-timer for microcontroller.
         // lcd.clear();
@@ -75,7 +75,7 @@ int main()
     return 0;
 }
 
-const Message& getNextMessage(LCD* lcd, const Customer& customer) {
+void displayNextMessage(LCD* lcd, const Customer& customer) {
     // Access and display the selected message on the LCD
      const Message& selectedMessage = customer.getNextMessage();
     
