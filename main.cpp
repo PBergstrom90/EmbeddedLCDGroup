@@ -7,6 +7,7 @@
 #include "lcd.h"
 #include "customer.h"
 #include "message.h"
+#include "clock.h"
 
 // Slightly modified version of previous LCD with different pinouts.
 // https://wokwi.com/projects/382811813035164673
@@ -48,6 +49,8 @@ int customerRng(Customer* customerList, uint8_t numCustomers);
 
 int main()
 {
+    init_clock();
+    
     LCD lcd;
     lcd.init();
 
@@ -59,9 +62,9 @@ int main()
 
     // Initialize arrays
     initCustomerMessages(customerList, numCustomers);
-    
+
     while (1) {
-        
+
         int customerIndex = customerRng(customerList, numCustomers);
         displayNextMessage(&lcd, customerList[customerIndex]);
 
