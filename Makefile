@@ -6,7 +6,7 @@ AVRSIZE="C:\avr\bin\avr-size"
 OBJISP="C:\avr\bin\avrdude"
 MCU=atmega328p
 CFLAGS=-Wall -Wextra  -Wundef -pedantic \
-		-Os -std=gnu99 -DF_CPU=16000000UL -mmcu=${MCU} -DBAUD=19200
+		-Os -std=gnu99 -DF_CPU=16000000UL -mmcu=${MCU} -DBAUD=19200 -fno-threadsafe-statics
 LDFLAGS=-mmcu=$(MCU)
 PORT=\\\\.\\COM3
 BIN=EmbeddedLCD
