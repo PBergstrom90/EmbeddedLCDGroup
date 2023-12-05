@@ -17,7 +17,8 @@ void LCD::init()
 
 void LCD::home()
 {
-    send_command(LCD_DDRAM_SET | (0));
+    send_command(LCD_HOME);
+    _delay_ms(2);
 }
 
 void LCD::position(unsigned x, unsigned y)
@@ -32,6 +33,7 @@ void LCD::position(unsigned x, unsigned y)
 void LCD::clear()
 {
     send_command(LCD_CLEAR);
+    _delay_ms(2);
 }
 
 void LCD::str_normal(const char *str)
@@ -115,6 +117,8 @@ void LCD::send_command(uint8_t command)
     LCD_CTRL_PORT &= ~LCD_RS;
     pulse_enable();
     _delay_us(100);
+
+    _delay_us(50);
 }
 
 void LCD::pulse_enable()

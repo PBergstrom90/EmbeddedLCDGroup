@@ -11,6 +11,7 @@
 #define LCD_CTRL_PORT PORTB // CTRL (PHYS PIN_8 -> PIN_13)
 
 #define LCD_CLEAR      0x01
+#define LCD_HOME       0x02
 #define LCD_4_BIT_MODE 0x02
 
 #define LCD_ENTRY_MODE           0x04
