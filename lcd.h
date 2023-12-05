@@ -62,7 +62,7 @@ public:
     void home();
     void position(unsigned x, unsigned y);
     void clear();
-    void str_normal(const char* str);
+    void str_normal(const char* str, uint32_t beg = 0, uint32_t end = 0xffffffff);
     void str_scroll(const char* str);
     void str_blink(const char* str, unsigned n);
     void set_cgram(uint8_t* buf);

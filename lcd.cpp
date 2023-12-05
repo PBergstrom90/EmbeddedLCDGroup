@@ -1,6 +1,14 @@
 #include "lcd.h"
 #include <util/delay.h>
 
+uint32_t utf8_strlen(const char* s)
+{
+    uint32_t length = 0;
+    while (*s)
+        length += (*s++ & 0xC0) != 0x80;
+    return length;
+}
+
 void LCD::init()
 {
     DDRD |= 0xf0;
@@ -38,9 +46,10 @@ void LCD::clear()
     _delay_ms(2);
 }
 
-void LCD::str_normal(const char *str)
+void LCD::str_normal(const char *str, uint32_t beg, uint32_t end)
 {
-    while (*str) {
+    uint32_t utf8_index = 0;
+    while (*str && utf8_index < end) {
         // A really simple UTF-8 handler that only handles the first two bytes
         // of a sequence, since that's all we need for nordic characters.
         uint32_t code_point = 0;
@@ -55,47 +64,57 @@ void LCD::str_normal(const char *str)
             str++;
         }
         
-        if (code_point == '\n') {
-            position(0, position_y + 1);
-        } else {
-            uint8_t ch;
-            switch (code_point) {
-                case 0x00e5: ch = (variant == LCDVariant::A00) ? '\x04' : '\xe5'; break; // å
-                case 0x00e4: ch = (variant == LCDVariant::A00) ? '\xe1' : '\xe4'; break; // ä
-                case 0x00f6: ch = (variant == LCDVariant::A00) ? '\xef' : '\xf6'; break; // ö
-                case 0x00c5: ch = (variant == LCDVariant::A00) ? '\x05' : '\xc5'; break; // Å
-                case 0x00c4: ch = (variant == LCDVariant::A00) ? '\x06' : '\xc4'; break; // Ä
-                case 0x00d6: ch = (variant == LCDVariant::A00) ? '\x07' : '\xd6'; break; // Ö
-                default: 
-                    ch = code_point;
-                    break;
-            }
+        if (utf8_index >= beg) {
+            if (code_point == '\n') {
+                position(0, position_y + 1);
+            } else {
+                uint8_t ch;
+                switch (code_point) {
+                    case 0x00e5: ch = (variant == LCDVariant::A00) ? '\x04' : '\xe5'; break; // å
+                    case 0x00e4: ch = (variant == LCDVariant::A00) ? '\xe1' : '\xe4'; break; // ä
+                    case 0x00f6: ch = (variant == LCDVariant::A00) ? '\xef' : '\xf6'; break; // ö
+                    case 0x00c5: ch = (variant == LCDVariant::A00) ? '\x05' : '\xc5'; break; // Å
+                    case 0x00c4: ch = (variant == LCDVariant::A00) ? '\x06' : '\xc4'; break; // Ä
+                    case 0x00d6: ch = (variant == LCDVariant::A00) ? '\x07' : '\xd6'; break; // Ö
+                    default: 
+                        ch = code_point;
+                        break;
+                }
 
-            send_ch(ch);
-            position_x++;
+                send_ch(ch);
+                position_x++;
+            }
         }
+
+        utf8_index++;
     }
 }
 
 void LCD::str_scroll(const char *str)
 {
+    //int x = 15;
+    //do {
+    //    clear();
+    //    position(x, 0);
+    //    str_normal(str);
+    //    _delay_ms(150);
+    //    x--;
+    //} while (x > 0);
+
+    unsigned length = utf8_strlen(str);
+    unsigned index = 0;
     int x = 15;
     do {
         clear();
         position(x, 0);
-        for (unsigned i = 0; i < (16 - x); i++) {
-            send_ch(str[i]);
-        }
+        str_normal(str, index, index + (16 - x));
         _delay_ms(150);
-        x--;
-    } while (x > 0);
-
-    do {
-        clear();
-        position(0, 0);
-        str_normal(str++);
-        _delay_ms(150);
-    } while (*str);
+        
+        if (x > 0)
+            x--;
+        else
+            index++;
+    } while (index < length);
 }
 
 void LCD::str_blink(const char *str, unsigned n)
