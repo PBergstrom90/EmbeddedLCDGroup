@@ -58,12 +58,12 @@ void LCD::str_normal(const char *str)
         } else {
             uint8_t ch;
             switch (code_point) {
-                case 0x00e5: ch = '\x04'; break; // å
-                case 0x00e4: ch = '\xe1'; break; // ä
-                case 0x00f6: ch = '\xef'; break; // ö
-                case 0x00c5: ch = '\x05'; break; // Å
-                case 0x00c4: ch = '\x06'; break; // Ä
-                case 0x00d6: ch = '\x07'; break; // Ö
+                case 0x00e5: ch = (variant == LCDVariant::A00) ? '\x04' : '\xe5'; break; // å
+                case 0x00e4: ch = (variant == LCDVariant::A00) ? '\xe1' : '\xe4'; break; // ä
+                case 0x00f6: ch = (variant == LCDVariant::A00) ? '\xef' : '\xf6'; break; // ö
+                case 0x00c5: ch = (variant == LCDVariant::A00) ? '\x05' : '\xc5'; break; // Å
+                case 0x00c4: ch = (variant == LCDVariant::A00) ? '\x06' : '\xc4'; break; // Ä
+                case 0x00d6: ch = (variant == LCDVariant::A00) ? '\x07' : '\xd6'; break; // Ö
                 default: 
                     ch = code_point;
                     break;

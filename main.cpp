@@ -47,7 +47,7 @@ void timerSeconds(LCD* lcd, uint32_t systemStart, uint32_t lastUpdate, char syst
 int main()
 {
     init_clock();
-    LCD lcd;
+    LCD lcd(LCDVariant::A02);
     lcd.init();
     srand((unsigned int)time(NULL));
     

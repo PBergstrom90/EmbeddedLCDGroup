@@ -45,11 +45,17 @@
 #define LCD_CGRAM_SET 0x40
 #define LCD_DDRAM_SET 0x80
 
+enum class LCDVariant {
+    A00,
+    A02,
+};
+
 class LCD {
 public:
-    LCD()
+    LCD(LCDVariant variant)
         : position_x(0)
         , position_y(0)
+        , variant(variant)
     { }
 
     void init();
@@ -67,6 +73,7 @@ private:
 
     int position_x;
     int position_y;
+    LCDVariant variant;
 };
 
 #endif // __LCD_H_
