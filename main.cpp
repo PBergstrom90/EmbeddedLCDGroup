@@ -162,32 +162,32 @@ void initCustomerMessages(Customer customerList[]) {
 
     // Hederlige Harrys Bilar:
     static const Message messagesCustomer1[] = {
-        {"K\xf6p bil hos Harry! ", MSGEFF_SCROLL, true, true},
-        {"En god bilaff\xe4r\n(f\xf6r Harry!)", MSGEFF_NONE, true, true},
+        {"Köp bil hos Harry! ", MSGEFF_SCROLL, true, true},
+        {"En god bilaffär\n(för Harry!)", MSGEFF_NONE, true, true},
         {"Hederlige Harrys\n     Bilar ", MSGEFF_BLINK, true, true}
     };
 
     // Farmor Ankas Pajer AB:
     static const Message messagesCustomer2[] = {
-        {"K\xf6p paj hos Farmor Anka! ", MSGEFF_SCROLL, true, true},
-        {"Skynda innan\nM\xe5rten har \xe4tit alla pajer ", MSGEFF_NONE, true, true}
+        {"Köp paj hos Farmor Anka! ", MSGEFF_SCROLL, true, true},
+        {"Skynda innan\nMårten har ätit alla pajer ", MSGEFF_NONE, true, true}
     };
 
     // Svarte Petters Svartbyggen:
     static const Message messagesCustomer3[] = {
-        {"L\xe5t Petter bygga \xe5t dig ", MSGEFF_SCROLL, true, false},
+        {"Låt Petter bygga åt dig ", MSGEFF_SCROLL, true, false},
         {"Bygga svart?\nRing Petter ", MSGEFF_NONE, false, true}
     };
 
     // Långbens detektivbyrå:
     static const Message messagesCustomer4[] = {
-        {"Mysterier? \nRing L\xe5ngben ", MSGEFF_NONE, true, true},
-        {"L\xe5ngben fixar\nbiffen ", MSGEFF_NONE, true, true}
+        {"Mysterier? \nRing Långben ", MSGEFF_NONE, true, true},
+        {"Långben fixar\nbiffen ", MSGEFF_NONE, true, true}
     };
 
     // IoTs reklambyrå:
     static const Message messagesCustomer5[] = {
-        {"Synas h\xe4r?  " CC_0 CC_1 CC_2 CC_3 "\nIoT:s reklambyr\xe5 ", MSGEFF_NONE, true, true}
+        {"Synas här?  " CC_0 CC_1 CC_2 CC_3 "\nIoT:s reklambyrå", MSGEFF_NONE, true, true}
     };
     // Set up customers
     customerList[0] = Customer(5000, true, messagesCustomer1, sizeof(messagesCustomer1) / sizeof(Message));
