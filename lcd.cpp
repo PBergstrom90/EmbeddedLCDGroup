@@ -39,13 +39,39 @@ void LCD::clear()
 void LCD::str_normal(const char *str)
 {
     while (*str) {
-        if (*str == '\n') {
+        // A really simple UTF-8 handler that only handles the first two bytes
+        // of a sequence, since that's all we need for nordic characters.
+        uint32_t code_point = 0;
+        if ((*str & 0x80) == 0) {
+            code_point = *str;
+            str++;
+        } else if ((*str & 0xe0) == 0xc0) {
+            code_point = (*str & 0x1f) << 6;
+            str++;
+
+            code_point |= *str & 0x3f;
+            str++;
+        }
+        
+        if (code_point == '\n') {
             position(0, position_y + 1);
         } else {
-            send_ch(*str);
+            uint8_t ch;
+            switch (code_point) {
+                case 0x00e5: ch = '\x04'; break; // å
+                case 0x00e4: ch = '\xe1'; break; // ä
+                case 0x00f6: ch = '\xef'; break; // ö
+                case 0x00c5: ch = '\x05'; break; // Å
+                case 0x00c4: ch = '\x06'; break; // Ä
+                case 0x00d6: ch = '\x07'; break; // Ö
+                default: 
+                    ch = code_point;
+                    break;
+            }
+
+            send_ch(ch);
             position_x++;
         }
-        str++;
     }
 }
 
