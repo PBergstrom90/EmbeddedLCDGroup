@@ -46,16 +46,37 @@
 }
 */
 
+#define CC_0 "\x08" // We can't use \x00 since that's also the null-character
+#define CC_1 "\x01"
+#define CC_2 "\x02"
+#define CC_3 "\x03"
+#define CC_4 "\x04"
+#define CC_5 "\x05"
+#define CC_6 "\x06"
+#define CC_7 "\x07"
+
 void initCustomerMessages(Customer customerList[]);
 void displayNextMessage(LCD* lcd, const Customer& customer, bool isOddMinute);
 int customerRng(Customer* customerList, uint8_t numCustomers);
 
 int main()
 {
-    
     init_clock();
     LCD lcd;
     lcd.init();
+
+    // For custom characters used in IoT:s reklambyrå ad
+    uint8_t cgram_buf[64] = {
+        0x00, 0x0e, 0x11, 0x04, 0x0a, 0x00, 0x04, 0x00, 
+        0x1f, 0x1f, 0x0e, 0x0e, 0x0e, 0x1f, 0x1f, 0x00,
+        0x00, 0x00, 0x1f, 0x1f, 0x1b, 0x1f, 0x1f, 0x00,
+        0x1f, 0x1f, 0x0e, 0x0e, 0x0e, 0x0e, 0x0e, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    };
+    lcd.set_cgram(cgram_buf);
 
     // Seed the random number generator
     srand((unsigned int)time(NULL));
@@ -196,7 +217,7 @@ void initCustomerMessages(Customer customerList[]) {
 
     // IoTs reklambyrå:
     static const Message messagesCustomer5[] = {
-        {"Synas h\xe4r?  \x08\x09\x0a\x0b\nIoT:s reklambyr\xe5 ", MSGEFF_NONE, true, true}
+        {"Synas h\xe4r?  " CC_0 CC_1 CC_2 CC_3 "\nIoT:s reklambyr\xe5 ", MSGEFF_NONE, true, true}
     };
 
     // Set up customers
