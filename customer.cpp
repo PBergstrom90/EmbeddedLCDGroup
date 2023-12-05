@@ -43,5 +43,4 @@ const Message& Customer::getNextMessage(bool isOddMinute) const {
         // If the message doesn't match the current minute condition, try again
         return getNextMessage(isOddMinute);
     }
-
 }

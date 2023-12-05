@@ -10,7 +10,7 @@
 #include "clock.h"
 
 // Seconds to show each customer, excluding delaytimes.
-#define SECONDS_PER_CUSTOMER 18
+#define SECONDS_PER_CUSTOMER 19
 
 // Slightly modified version of previous LCD with different pinouts.
 // https://wokwi.com/projects/382811813035164673
@@ -22,30 +22,7 @@
 // Ä = \xc4
 // Ö = \xd6
 
-// For IoT Bitmap image:
-/*static void self_promotion(LCD& lcd)
-{
-    uint8_t cgram_buf[64] = {
-        0x00, 0x0e, 0x11, 0x04, 0x0a, 0x00, 0x04, 0x00, 
-        0x1f, 0x1f, 0x0e, 0x0e, 0x0e, 0x1f, 0x1f, 0x00,
-        0x00, 0x00, 0x1f, 0x1f, 0x1b, 0x1f, 0x1f, 0x00,
-        0x1f, 0x1f, 0x0e, 0x0e, 0x0e, 0x0e, 0x0e, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    };
-    lcd.set_cgram(cgram_buf);
-
-    lcd.position(0, 0);
-    lcd.str_normal("Synas h\xe4r?  \x08\x09\x0a\x0b");
-    lcd.position(0, 1);
-    lcd.str_normal("IoT:s reklambyr\xe5");
-
-    _delay_ms(3000);
-}
-*/
-
+// For IoT bitmap image:
 #define CC_0 "\x08" // We can't use \x00 since that's also the null-character
 #define CC_1 "\x01"
 #define CC_2 "\x02"
@@ -55,16 +32,25 @@
 #define CC_6 "\x06"
 #define CC_7 "\x07"
 
+// Initialize customerarray.
 void initCustomerMessages(Customer customerList[]);
+
+// Show message on LCD
 void displayNextMessage(LCD* lcd, const Customer& customer, bool isOddMinute);
+
+// Choose random customer.
 int customerRng(Customer* customerList, uint8_t numCustomers);
+
+// DEBUG-function. To display seconds passed.
+void timerSeconds(LCD* lcd, uint32_t systemStart, uint32_t lastUpdate, char systemStartString[20]);
 
 int main()
 {
     init_clock();
     LCD lcd;
     lcd.init();
-
+    srand((unsigned int)time(NULL));
+    
     // For custom characters used in IoT:s reklambyrå ad
     uint8_t cgram_buf[64] = {
         0x00, 0x0e, 0x11, 0x04, 0x0a, 0x00, 0x04, 0x00, 
@@ -78,40 +64,24 @@ int main()
     };
     lcd.set_cgram(cgram_buf);
 
-    // Seed the random number generator
-    srand((unsigned int)time(NULL));
-
     const uint8_t numCustomers = 5;
     Customer customerList[numCustomers];
-
-    // Initialize arrays
     initCustomerMessages(customerList);
 
     uint32_t systemStart = elapsed_seconds();
     uint32_t lastUpdate = systemStart;
     char systemStartString[20];
 
+    // Main programloop:
     while (1) {
-        // Update the system start time if a minute has passed
-        if (elapsed_seconds() - lastUpdate >= 1) {
-            systemStart = elapsed_seconds();
-            lastUpdate = systemStart;
-        }
         bool isOddMinute  = is_odd_minute();
         
-        // DEBUG MSG: Show seconds since system start.
-        sprintf(systemStartString, "Seconds: %ld" , systemStart);
-        lcd.clear();
-        lcd.str_normal(systemStartString);
-        _delay_ms(1000);
-        lcd.clear();
-
+        // For Debug:
+        // timerSeconds(&lcd, systemStart, lastUpdate, systemStartString);
 
         int customerIndex = customerRng(customerList, numCustomers);
         displayNextMessage(&lcd, customerList[customerIndex], isOddMinute);
-    
     }
-
     return 0;
 }
 
@@ -219,11 +189,25 @@ void initCustomerMessages(Customer customerList[]) {
     static const Message messagesCustomer5[] = {
         {"Synas h\xe4r?  " CC_0 CC_1 CC_2 CC_3 "\nIoT:s reklambyr\xe5 ", MSGEFF_NONE, true, true}
     };
-
     // Set up customers
     customerList[0] = Customer(5000, true, messagesCustomer1, sizeof(messagesCustomer1) / sizeof(Message));
     customerList[1] = Customer(3000, true, messagesCustomer2, sizeof(messagesCustomer2) / sizeof(Message));
     customerList[2] = Customer(1500, true, messagesCustomer3, sizeof(messagesCustomer3) / sizeof(Message));
     customerList[3] = Customer(4000, true, messagesCustomer4, sizeof(messagesCustomer4) / sizeof(Message));
     customerList[4] = Customer(1000, true, messagesCustomer5, sizeof(messagesCustomer5) / sizeof(Message));
+}
+
+// DEBUG-function, to display seconds elapsed.
+void timerSeconds(LCD* lcd, uint32_t systemStart, uint32_t lastUpdate, char systemStartString[20]) {
+        // Update the system start time if a minute has passed.
+        if (elapsed_seconds() - lastUpdate >= 1) {
+            systemStart = elapsed_seconds();
+            lastUpdate = systemStart;
+        }
+        // Show Seconds on LCD.
+        sprintf(systemStartString, "Seconds: %ld" , systemStart);
+        lcd->clear();
+        lcd->str_normal(systemStartString);
+        _delay_ms(1000);
+        lcd->clear();
 }

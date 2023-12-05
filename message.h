@@ -9,7 +9,6 @@ enum MessageEffects {
     MSGEFF_SCROLL = (1 << 0),
     MSGEFF_BLINK  = (1 << 1),
 };
-
 class Message {
 public:
     Message(const char* text, unsigned flags, bool evenminutes, bool oddminutes);

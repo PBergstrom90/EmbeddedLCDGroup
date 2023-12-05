@@ -5,7 +5,6 @@
 #include "lcd.h"
 
 class Message;
-
 class Customer {
 
 public:

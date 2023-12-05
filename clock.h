@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 void init_clock();
-
 uint32_t elapsed_seconds();
 bool is_odd_minute();
 
