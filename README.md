@@ -53,7 +53,7 @@ The billboard features messages from different customers, each with its own set 
 - Hederlige Harrys Bilar: Messages related to buying cars from Harry's dealership.
 - Farmor Ankas Pajer AB: Messages encouraging customers to buy pies from Grandma Anka.
 - Svarte Petters Svartbyggen: Messages promoting construction services by Svarte Petter.
-- Långbens Detective Agency: Messages to solve mysteries with Långben.
+- Långbens Detective Agency: Messages about solving mysteries with Långben.
 - IoT Advertising Bureau: Promote your brand with messages from IoT's advertising agency.
 
 ## Debugging
