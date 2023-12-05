@@ -1,5 +1,5 @@
-#ifndef MESSAGE_H_
-#define MESSAGE_H_
+#ifndef __MESSAGE_H_
+#define __MESSAGE_H_
 
 #include <string.h>
 #include "customer.h"
@@ -16,6 +16,9 @@ public:
     const char* getText() const;
     bool shouldScroll() const;
     bool shouldBlink() const;
+    bool evenMinutes() const;
+    bool oddMinutes() const;
+
 private:
     const char* text;
     bool scroll;

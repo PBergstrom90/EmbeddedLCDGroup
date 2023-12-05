@@ -20,3 +20,11 @@ bool Message::shouldScroll() const {
 bool Message::shouldBlink() const {
     return blink;
 }
+
+bool Message::evenMinutes() const {
+    return evenminutes;
+}
+
+bool Message::oddMinutes() const {
+    return oddminutes;
+}

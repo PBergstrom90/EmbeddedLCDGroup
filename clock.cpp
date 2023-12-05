@@ -14,7 +14,6 @@ void init_clock()
     TCCR1B |= (1 << CS12) | (1 << CS10);
     TIMSK1 |= (1 << TOIE1);
     TCNT1 = 65535 - (F_CPU / 1024);
-
     TCCR1A = 0;
     TIMSK1 = (1 << TOIE1);
 
