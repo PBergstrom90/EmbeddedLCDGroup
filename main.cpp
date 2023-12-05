@@ -125,12 +125,14 @@ int customerRng(Customer* customers, uint8_t numCustomers)
     // Initialize the previous customer index.
     static int prevCustomerIndex = -1;
     
+    int activeCustomers = 0;
     while (true) {
         // Calculate total amount of cash for active customers.
         int totalCash = 0;
         for (uint8_t i = 0; i < numCustomers; i++) {
             if (customers[i].isActive()) {
                 totalCash += customers[i].getPay();
+                activeCustomers++;
             }
         }
 
@@ -156,7 +158,7 @@ int customerRng(Customer* customers, uint8_t numCustomers)
         }
 
         // If the same customer is chosen again, continue to the next iteration.
-        if (luckyCustomerIndex == prevCustomerIndex) {
+        if (luckyCustomerIndex == prevCustomerIndex && activeCustomers > 1) {
             continue;
         }
         prevCustomerIndex = luckyCustomerIndex;
