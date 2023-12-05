@@ -1,13 +1,16 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
-#include <avr/wdt.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 #include "lcd.h"
 #include "customer.h"
 #include "message.h"
 #include "clock.h"
+
+// Seconds to show each customer, excluding delaytimes.
+#define SECONDS_PER_CUSTOMER 18
 
 // Slightly modified version of previous LCD with different pinouts.
 // https://wokwi.com/projects/382811813035164673
@@ -43,14 +46,14 @@
 }
 */
 
-void initCustomerMessages(Customer customerList[], const int numCustomers);
-void displayNextMessage(LCD* lcd, const Customer& customer);
+void initCustomerMessages(Customer customerList[]);
+void displayNextMessage(LCD* lcd, const Customer& customer, bool isOddMinute);
 int customerRng(Customer* customerList, uint8_t numCustomers);
 
 int main()
 {
-    init_clock();
     
+    init_clock();
     LCD lcd;
     lcd.init();
 
@@ -61,79 +64,120 @@ int main()
     Customer customerList[numCustomers];
 
     // Initialize arrays
-    initCustomerMessages(customerList, numCustomers);
+    initCustomerMessages(customerList);
+
+    uint32_t systemStart = elapsed_seconds();
+    uint32_t lastUpdate = systemStart;
+    char systemStartString[20];
 
     while (1) {
+        // Update the system start time if a minute has passed
+        if (elapsed_seconds() - lastUpdate >= 1) {
+            systemStart = elapsed_seconds();
+            lastUpdate = systemStart;
+        }
+        bool isOddMinute  = is_odd_minute();
+        
+        // DEBUG MSG: Show seconds since system start.
+        sprintf(systemStartString, "Seconds: %ld" , systemStart);
+        lcd.clear();
+        lcd.str_normal(systemStartString);
+        _delay_ms(1000);
+        lcd.clear();
+
 
         int customerIndex = customerRng(customerList, numCustomers);
-        displayNextMessage(&lcd, customerList[customerIndex]);
-
-        // DEBUG MSG: Reset Watchdog-timer for microcontroller.
-        // lcd.clear();
-        // lcd.str_normal("Reset watchdog");
-        // _delay_ms(1000);
-        // wdt_reset();
+        displayNextMessage(&lcd, customerList[customerIndex], isOddMinute);
+    
     }
 
     return 0;
 }
 
-void displayNextMessage(LCD* lcd, const Customer& customer) {
+void displayNextMessage(LCD* lcd, const Customer& customer, bool isOddMinute) {
     // Access and display the selected message on the LCD
-     const Message& selectedMessage = customer.getNextMessage();
-    
-     lcd->clear();
-     if (selectedMessage.shouldScroll()) {
-         lcd->str_scroll(selectedMessage.getText());
-         _delay_ms(1000);
-     } else if (selectedMessage.shouldBlink()) {
-        lcd->str_blink(selectedMessage.getText(), 4);
-         _delay_ms(1000);
-     } else {
-        lcd->str_normal(selectedMessage.getText());
-        _delay_ms(2000);
-     }
+    const Message& selectedMessage = customer.getNextMessage(isOddMinute);
+    bool loop = true;
+        uint32_t start_s = elapsed_seconds();
+        while (loop){
+            
+            if (selectedMessage.shouldScroll()) {
+            lcd->str_scroll(selectedMessage.getText());
+            _delay_ms(1000);
+            } else if (selectedMessage.shouldBlink()) {
+            lcd->clear();
+            lcd->str_blink(selectedMessage.getText(), 4);
+            _delay_ms(1000);
+            } else {
+            lcd->clear();
+            lcd->str_normal(selectedMessage.getText());
+            _delay_ms(2000);
+            }
+        if (elapsed_seconds() - start_s >= SECONDS_PER_CUSTOMER) {
+            lcd->clear();
+            loop = false;  // Exit the loop
+            }
+        }
  }
 
 int customerRng(Customer* customers, uint8_t numCustomers)
 {
-  // Calculate total amount of cash
-  int totalCash = 0;
-  for (uint8_t i = 0; i < numCustomers; i++) {
-    totalCash += customers[i].getPay();
-  }
+    // Initialize the previous customer index.
+    static int prevCustomerIndex = -1;
+    
+    while (true) {
+        // Calculate total amount of cash for active customers.
+        int totalCash = 0;
+        for (uint8_t i = 0; i < numCustomers; i++) {
+            if (customers[i].isActive()) {
+                totalCash += customers[i].getPay();
+            }
+        }
 
-  unsigned int randomValue = rand() & totalCash;
-  unsigned int lowerBound = 0;
-  int luckyCustomerIndex= -1;
-  for (uint8_t i = 0; i < numCustomers; i++) {
-    if (randomValue >= lowerBound && randomValue < lowerBound + customers[i].getPay()) {
-      // We found our winner
-      luckyCustomerIndex= i;
-      break;
+        // If there are no active customers, try again.
+        if (totalCash == 0) {
+            continue;
+        }
+
+        unsigned int randomValue = rand() % totalCash;
+        unsigned int lowerBound = 0;
+        int luckyCustomerIndex = -1;
+
+        for (uint8_t i = 0; i < numCustomers; i++) {
+            if (customers[i].isActive()) {
+                if (randomValue >= lowerBound && randomValue < lowerBound + customers[i].getPay()) {
+                    // We found our winner
+                    luckyCustomerIndex = i;
+                    break;
+                }
+                // Increase our lower bound for the next customer.
+                lowerBound += customers[i].getPay();
+            }
+        }
+
+        // If the same customer is chosen again, continue to the next iteration.
+        if (luckyCustomerIndex == prevCustomerIndex) {
+            continue;
+        }
+        prevCustomerIndex = luckyCustomerIndex;
+        return luckyCustomerIndex;
     }
-
-    // Increase our lower bound for next customer
-    lowerBound += customers[i].getPay();
-  }
-  return luckyCustomerIndex;
 }
 
-// Function to initialize and return the arrays
-void initCustomerMessages(Customer customerList[], const int numCustomers) {
-    // Arrays of unique messages for each customer
+// Function to initialize and return the customerarrays.
+void initCustomerMessages(Customer customerList[]) {
 
     // Hederlige Harrys Bilar:
     static const Message messagesCustomer1[] = {
-        {"K\xf6p bil hos Harry! ", MSGEFF_SCROLL, false, false},
-        {"En god bilaff\xe4r\n(f\xf6r Harry! )", MSGEFF_NONE, false, false},
-        {"Hederlige Harrys\n     Bilar ", MSGEFF_BLINK, false, false}
+        {"K\xf6p bil hos Harry! ", MSGEFF_SCROLL, true, true},
+        {"En god bilaff\xe4r\n(f\xf6r Harry!)", MSGEFF_NONE, true, true},
+        {"Hederlige Harrys\n     Bilar ", MSGEFF_BLINK, true, true}
     };
 
     // Farmor Ankas Pajer AB:
     static const Message messagesCustomer2[] = {
-        {"K\xf6p paj hos Farmor Anka! ", MSGEFF_SCROLL, false, false},
-        {"Skynda innan\nM\xe5rten har \xe4tit alla pajer ", MSGEFF_NONE, false, false}
+        {"K\xf6p paj hos Farmor Anka! ", MSGEFF_SCROLL, true, true},
+        {"Skynda innan\nM\xe5rten har \xe4tit alla pajer ", MSGEFF_NONE, true, true}
     };
 
     // Svarte Petters Svartbyggen:
@@ -144,13 +188,13 @@ void initCustomerMessages(Customer customerList[], const int numCustomers) {
 
     // Långbens detektivbyrå:
     static const Message messagesCustomer4[] = {
-        {"Mysterier? \nRing L\xe5ngben ", MSGEFF_NONE, false, false},
-        {"L\xe5ngben fixar\nbiffen ", MSGEFF_NONE, false, false}
+        {"Mysterier? \nRing L\xe5ngben ", MSGEFF_NONE, true, true},
+        {"L\xe5ngben fixar\nbiffen ", MSGEFF_NONE, true, true}
     };
 
     // IoTs reklambyrå:
     static const Message messagesCustomer5[] = {
-        {"Synas h\xe4r?  \x08\x09\x0a\x0b\nIoT:s reklambyr\xe5 ", MSGEFF_SCROLL, false, false}
+        {"Synas h\xe4r?  \x08\x09\x0a\x0b\nIoT:s reklambyr\xe5 ", MSGEFF_NONE, true, true}
     };
 
     // Set up customers

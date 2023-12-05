@@ -1,5 +1,5 @@
-#ifndef LCD_H_
-#define LCD_H_
+#ifndef __LCD_H_
+#define __LCD_H_
 
 #include <avr/io.h>
 #include <stdint.h>
@@ -68,4 +68,4 @@ private:
     int position_y;
 };
 
-#endif
+#endif // __LCD_H_
