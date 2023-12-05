@@ -92,15 +92,6 @@ void LCD::str_normal(const char *str, uint32_t beg, uint32_t end)
 
 void LCD::str_scroll(const char *str)
 {
-    //int x = 15;
-    //do {
-    //    clear();
-    //    position(x, 0);
-    //    str_normal(str);
-    //    _delay_ms(150);
-    //    x--;
-    //} while (x > 0);
-
     unsigned length = utf8_strlen(str);
     unsigned index = 0;
     int x = 15;
