@@ -106,6 +106,8 @@ void LCD::str_scroll(const char *str)
         else
             index++;
     } while (index < length);
+
+    clear();
 }
 
 void LCD::str_blink(const char *str, unsigned n)
