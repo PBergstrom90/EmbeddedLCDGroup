@@ -19,6 +19,8 @@ void LCD::home()
 {
     send_command(LCD_HOME);
     _delay_ms(2);
+    position_x = 0;
+    position_y = 0;
 }
 
 void LCD::position(unsigned x, unsigned y)
