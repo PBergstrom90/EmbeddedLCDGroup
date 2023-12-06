@@ -54,6 +54,7 @@ The billboard features messages from different customers, each with its own set 
 - Svarte Petters Svartbyggen: Messages promoting construction services by Svarte Petter.
 - Långbens Dektektivbyrå: Messages about solving mysteries with Långben.
 - IoT Reklambyrå: Promote your brand with messages from IoT's advertising agency. Including bitmaps!
+- BONUS: A final entry, containing messages based on the Swedish satiremovie, "Yrrol".
 
 ## Debugging
 
