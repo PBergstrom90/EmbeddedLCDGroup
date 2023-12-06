@@ -15,13 +15,6 @@
 // Slightly modified version of previous LCD with different pinouts.
 // https://wokwi.com/projects/382811813035164673
 
-// å = \xe5
-// ä = \xe4
-// ö = \xf6
-// Å = \xc5
-// Ä = \xc4
-// Ö = \xd6
-
 // For IoT bitmap image:
 #define CC_0 "\x08" // We can't use \x00 since that's also the null-character
 #define CC_1 "\x01"
