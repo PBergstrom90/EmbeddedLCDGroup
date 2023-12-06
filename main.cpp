@@ -163,7 +163,7 @@ void initCustomerMessages(Customer customerList[]) {
     // Farmor Ankas Pajer AB:
     static const Message messagesCustomer2[] = {
         {"Köp paj hos Farmor Anka! ", MSGEFF_SCROLL, true, true},
-        {"Skynda innan\nMårten har ätit alla pajer ", MSGEFF_NONE, true, true}
+        {" Skynda! Mårten\näter alla pajer!", MSGEFF_NONE, true, true}
     };
 
     // Svarte Petters Svartbyggen:
@@ -174,8 +174,8 @@ void initCustomerMessages(Customer customerList[]) {
 
     // Långbens detektivbyrå:
     static const Message messagesCustomer4[] = {
-        {"Mysterier? \nRing Långben ", MSGEFF_NONE, true, true},
-        {"Långben fixar\nbiffen ", MSGEFF_NONE, true, true}
+        {"   Mysterier?\n  Ring Långben", MSGEFF_NONE, true, true},
+        {"Långben fixar\nbiffen!", MSGEFF_NONE, true, true}
     };
 
     // IoTs reklambyrå:
