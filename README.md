@@ -26,7 +26,6 @@ This Arduino project turns an LCD screen into a dynamic billboard that displays 
 
 - Arduino Board
 - LCD Screen
-- Various Sensors (if any, based on your actual setup)
 
 ## Setup
 
@@ -37,7 +36,7 @@ This Arduino project turns an LCD screen into a dynamic billboard that displays 
 
 ## Usage
 
-The program runs continuously, displaying messages from different customers with varying effects. The messages change every 19 seconds, creating a dynamic and attention-grabbing billboard.
+The program runs continuously, displaying messages from different customers with varying effects. The messages change every 19-20 seconds, creating a dynamic and attention-grabbing billboard.
 
 ## Custom Characters
 
@@ -53,8 +52,8 @@ The billboard features messages from different customers, each with its own set 
 - Hederlige Harrys Bilar: Messages related to buying cars from Harry's dealership.
 - Farmor Ankas Pajer AB: Messages encouraging customers to buy pies from Grandma Anka.
 - Svarte Petters Svartbyggen: Messages promoting construction services by Svarte Petter.
-- Långbens Detective Agency: Messages about solving mysteries with Långben.
-- IoT Advertising Bureau: Promote your brand with messages from IoT's advertising agency.
+- Långbens Dektektivbyrå: Messages about solving mysteries with Långben.
+- IoT Reklambyrå: Promote your brand with messages from IoT's advertising agency. Including bitmaps!
 
 ## Debugging
 
