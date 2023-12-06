@@ -11,6 +11,11 @@
             "cwd": "c:\\Users\\Pontu\\_Dev\\Nackademin\\C\\EmbeddedLCDGroup",
             "binaryPath": "c:\\Users\\Pontu\\_Dev\\Nackademin\\C\\EmbeddedLCDGroup\\EmbeddedLCD.elf",
             "binaryArgs": []
+        },
+        {
+            "cwd": "c:\\Users\\Kazem\\_Dev\\C++\\EmbaddedLCD\\EmbeddedLCDGroup-1",
+            "binaryPath": "c:\\Users\\Kazem\\_Dev\\C++\\EmbaddedLCD\\EmbeddedLCDGroup-1\\EmbeddedLCD.elf",
+            "binaryArgs": []
         }
     ]
 }
