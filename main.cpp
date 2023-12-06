@@ -57,7 +57,7 @@ int main()
     };
     lcd.set_cgram(cgram_buf);
 
-    const uint8_t numCustomers = 5;
+    const uint8_t numCustomers = 6;
     Customer customerList[numCustomers];
     initCustomerMessages(customerList);
 
@@ -182,12 +182,18 @@ void initCustomerMessages(Customer customerList[]) {
     static const Message messagesCustomer5[] = {
         {"Synas här?  " CC_0 CC_1 CC_2 CC_3 "\nIoT:s reklambyrå", MSGEFF_NONE, true, true}
     };
+
+    static const Message messagesCustomer6[] = {
+        {"T-Röd - för dig som tänkt klart", MSGEFF_SCROLL, true, true},
+        {"Claes Månsson - om flickan själv får välja", MSGEFF_SCROLL, true, true}
+    };
     // Set up customers
     customerList[0] = Customer(5000, true, messagesCustomer1, sizeof(messagesCustomer1) / sizeof(Message));
     customerList[1] = Customer(3000, true, messagesCustomer2, sizeof(messagesCustomer2) / sizeof(Message));
     customerList[2] = Customer(1500, true, messagesCustomer3, sizeof(messagesCustomer3) / sizeof(Message));
     customerList[3] = Customer(4000, true, messagesCustomer4, sizeof(messagesCustomer4) / sizeof(Message));
     customerList[4] = Customer(1000, true, messagesCustomer5, sizeof(messagesCustomer5) / sizeof(Message));
+    customerList[5] = Customer(6000, true, messagesCustomer6, sizeof(messagesCustomer6) / sizeof(Message));
 }
 
 // DEBUG-function, to display seconds elapsed.
